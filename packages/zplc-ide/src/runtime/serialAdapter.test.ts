@@ -129,10 +129,22 @@ describe('SerialAdapter program control', () => {
     internals.sendJsonCommand = async () => ({ count: 0, items: [] });
     await expect(adapter.listForcedValues()).resolves.toEqual([]);
 
+    internals.sendJsonCommand = async () => [];
+    await expect(adapter.listForcedValues()).resolves.toEqual([]);
+
     internals.sendJsonCommand = async () => ({ count: 1, items: [{ addr: 16, size: 2, bytes: '0aFF' }] });
     await expect(adapter.listForcedValues()).resolves.toEqual([{
       path: '0x0010', address: 16, size: 2, type: 'WORD', bytesHex: '0aFF', state: WATCH_FORCE_STATE.FORCED,
     }]);
+  });
+
+  it('accepts the firmware communication-map placeholder without a count', async () => {
+    const adapter = new SerialAdapter();
+    const internals = adapter as unknown as { _connected: boolean; sendJsonCommand: () => Promise<unknown> };
+    internals._connected = true;
+    internals.sendJsonCommand = async () => ({ entries: [] });
+
+    await expect(adapter.getCommunicationMap()).resolves.toEqual([]);
   });
 
   it('rejects malformed force-list responses without exposing their payload', async () => {

@@ -111,6 +111,13 @@ function parseStatusInfo(value: unknown): StatusInfo {
 }
 
 function parseForcedValues(value: unknown): WatchForceEntry[] {
+  if (Array.isArray(value)) {
+    if (value.length === 0) {
+      return [];
+    }
+    throw new Error('Invalid force list response');
+  }
+
   if (!isRecord(value)
     || !isNonNegativeInteger(value.count)
     || value.count > 8
@@ -234,9 +241,15 @@ export interface MqttRuntimeStatus {
   client_id: string;
 }
 
-interface CommunicationMapResponse {
-  count: number;
-  entries: CommunicationMapEntry[];
+function parseCommunicationMap(value: unknown): CommunicationMapEntry[] {
+  if (!isRecord(value) || !Array.isArray(value.entries)) {
+    throw new Error('Invalid communication map response');
+  }
+  if (value.count !== undefined
+    && (!isNonNegativeInteger(value.count) || value.count !== value.entries.length)) {
+    throw new Error('Invalid communication map response');
+  }
+  return value.entries as CommunicationMapEntry[];
 }
 
 /**
@@ -753,8 +766,7 @@ export class SerialAdapter implements IDebugAdapter {
   }
 
   async getCommunicationMap(): Promise<CommunicationMapEntry[]> {
-    const result = await this.sendJsonCommand('zplc comm map') as CommunicationMapResponse;
-    return result.entries ?? [];
+    return parseCommunicationMap(await this.sendJsonCommand('zplc comm map'));
   }
 
   async getMqttStatus(): Promise<MqttRuntimeStatus> {
