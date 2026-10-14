@@ -106,5 +106,22 @@
     "validation_level": "cross-build",
     "evidence_refs": [],
     "docs_ref": "docs/docs/reference/index.md#supported-boards"
+  },
+  {
+    "board_id": "xc8064-gd32f527",
+    "display_name": "XC8064 HS-DDC GD32F527ZMT7",
+    "ide_id": "xc8064_gd32f527",
+    "zephyr_board": "xc8064_gd32f527",
+    "variant": "gd32f527zmt7",
+    "memory": { "work_size": 8192, "retain_size": 4096, "code_size_max": 45056 },
+    "support_assets": [
+      "firmware/app/boards/xc8064_gd32f527.profile.json"
+    ],
+    "build_command": "west build -b xc8064_gd32f527 firmware/app --pristine",
+    "network_class": "serial-focused",
+    "network_interface": "none",
+    "validation_level": "cross-build",
+    "evidence_refs": [],
+    "docs_ref": "docs/docs/reference/index.md#supported-boards"
   }
 ]

@@ -238,6 +238,8 @@ jobs:
             board: nucleo_h743zi/stm32h743xx
           - id: arduino-opta
             board: arduino_opta/stm32h747xx/m7
+          - id: xc8064-gd32f527
+            board: xc8064_gd32f527
     env:
       ZEPHYR_TOOLCHAIN_VARIANT: zephyr
     steps:

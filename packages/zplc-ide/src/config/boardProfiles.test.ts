@@ -13,9 +13,9 @@ import {
 } from './boardProfiles';
 
 describe('board network profile mapping', () => {
-  test('projects only the six catalogued evidence tiers and counts', () => {
+  test('projects every catalogued evidence tier and count', () => {
     const catalogue = (supportedBoardsManifest as Array<{ ide_id: string }>).map((board) => board.ide_id);
-    expect(catalogue).toHaveLength(6);
+    expect(catalogue).toHaveLength(7);
     expect(catalogue.every((id) => getBoardEvidenceSummary(id)?.validationLevel === 'cross-build')).toBe(true);
     expect(catalogue.every((id) => getBoardEvidenceSummary(id)?.evidenceCount === 0)).toBe(true);
     expect(getBoardEvidenceSummary('custom')).toBeUndefined();
@@ -26,6 +26,7 @@ describe('board network profile mapping', () => {
     expect(getBoardNetworkType('arduino_giga_r1')).toBe('none');
     expect(getBoardNetworkType('stm32f746g_disco')).toBe('ethernet');
     expect(getBoardNetworkType('nucleo_h743zi')).toBe('ethernet');
+    expect(getBoardNetworkType('xc8064_gd32f527')).toBe('none');
   });
 
   test('keeps board options aligned with the supported-board manifest', () => {
@@ -48,7 +49,7 @@ describe('board network profile mapping', () => {
   test('maps all IDE board IDs to their exact canonical Zephyr targets', () => {
     expect(Object.fromEntries([
       'rpi_pico', 'arduino_giga_r1', 'esp32s3_devkitc',
-      'stm32f746g_disco', 'nucleo_h743zi', 'arduino_opta_wifi',
+      'stm32f746g_disco', 'nucleo_h743zi', 'arduino_opta_wifi', 'xc8064_gd32f527',
     ].map((id) => [id, getZephyrBoardTarget(id)]))).toEqual({
       rpi_pico: 'rpi_pico/rp2040',
       arduino_giga_r1: 'arduino_giga_r1/stm32h747xx/m7',
@@ -56,10 +57,12 @@ describe('board network profile mapping', () => {
       stm32f746g_disco: 'stm32f746g_disco/stm32f746xx',
       nucleo_h743zi: 'nucleo_h743zi/stm32h743xx',
       arduino_opta_wifi: 'arduino_opta/stm32h747xx/m7',
+      xc8064_gd32f527: 'xc8064_gd32f527',
     });
     expect(isKnownBoardTarget('missing')).toBe(false);
     expect(isKnownZephyrBoardTarget('arduino_opta/stm32h747xx/m7')).toBe(true);
     expect(isKnownZephyrBoardTarget('arduino_opta')).toBe(false);
+    expect(isKnownBoardTarget('xc8064_gd32f527')).toBe(true);
   });
 });
 
@@ -69,6 +72,11 @@ describe('board compiler memory profiles', () => {
       workSize: 2048,
       retainSize: 1024,
       codeSizeMax: 8192,
+    });
+    expect(getCompilerMemoryProfile('xc8064_gd32f527')).toEqual({
+      workSize: 8192,
+      retainSize: 4096,
+      codeSizeMax: 45056,
     });
     for (const board of ['posix', 'custom', 'missing', undefined]) {
       expect(getCompilerMemoryProfile(board)).toBeUndefined();

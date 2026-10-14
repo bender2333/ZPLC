@@ -30,6 +30,8 @@ flowchart TD
   network --> b5
   b6["Arduino Opta WiFi (STM32H747 M7)"]
   network --> b6
+  b7["XC8064 HS-DDC GD32F527ZMT7"]
+  serial --> b7
 ```
 
 ## Matriz de placas
@@ -42,6 +44,7 @@ flowchart TD
 | STM32F746G Discovery | `stm32f746g-disco` | `stm32f746g_disco` | `stm32f746g_disco/stm32f746xx` | Capacidad de red (Ethernet) | cross-build | 0 refs |
 | STM32 Nucleo-H743ZI | `nucleo-h743zi` | `nucleo_h743zi` | `nucleo_h743zi/stm32h743xx` | Capacidad de red (Ethernet) | cross-build | 0 refs |
 | Arduino Opta WiFi (STM32H747 M7) | `arduino-opta-wifi-m7` | `arduino_opta_wifi` | `arduino_opta/stm32h747xx/m7` | Capacidad de red (Wi-Fi) | cross-build | 0 refs |
+| XC8064 HS-DDC GD32F527ZMT7 | `xc8064-gd32f527` | `xc8064_gd32f527` | `xc8064_gd32f527` | Enfoque serial | cross-build | 0 refs |
 
 ## Detalle por placa
 
@@ -134,3 +137,17 @@ flowchart TD
 - **Assets de soporte:**
   - `firmware/app/boards/arduino_opta_stm32h747xx_m7.conf`
   - `firmware/app/boards/arduino_opta_stm32h747xx_m7.overlay`
+
+### XC8064 HS-DDC GD32F527ZMT7
+
+- **Board ID:** `xc8064-gd32f527`
+- **IDE ID:** `xc8064_gd32f527`
+- **Zephyr target:** `xc8064_gd32f527`
+- **Variant:** `gd32f527zmt7`
+- **Network:** Enfoque serial
+- **Nivel de evidencia:** cross-build
+- **Evidencia HIL:** 0 references
+- **Comando de build:** `west build -b xc8064_gd32f527 firmware/app --pristine`
+- **Ancla de referencia:** `docs/docs/reference/index.md#supported-boards`
+- **Assets de soporte:**
+  - `firmware/app/boards/xc8064_gd32f527.profile.json`
